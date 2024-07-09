@@ -5,15 +5,19 @@ import { RandomFox } from '../components/RandomFox'
 
 const random = () => Math.floor(Math.random() *123) + 1
 
-type ImageItems = Array<{  id: string, url: string}>
+//generar un id unico simple
+const generateid = () => Math.random().toString(36).substr(2,9);
+
+type ImageItems = {  id: string, url: string}
 
 export default function Home() {
-  const [images, setImages] = useState<ImageItems>([
-    {id:'.... ', url:`https://randomfox.ca/images/${random()}.jpg`} ,
-    {id:'.... ', url:`https://randomfox.ca/images/${random()}.jpg`},
-    {id:'.... ', url:`https://randomfox.ca/images/${random()}.jpg`},
-    {id:'.... ', url:`https://randomfox.ca/images/${random()}.jpg`},
+  const [images, setImages] = useState<Array<ImageItems>>([
+    {id:generateid(), url:`https://randomfox.ca/images/${random()}.jpg`} ,
+    {id:generateid(), url:`https://randomfox.ca/images/${random()}.jpg`},
+    {id:generateid(), url:`https://randomfox.ca/images/${random()}.jpg`},
+    {id:generateid(), url:`https://randomfox.ca/images/${random()}.jpg`},
   ]);
+
   return (
     <div>
       <head>
@@ -24,9 +28,9 @@ export default function Home() {
 
       <main>
       <h1 className="text-3xl font-bold underline">Hello world!</h1>      
-      {images.map((image, index) => (
-        <div key={index} className="p-4">
-          <RandomFox image={image}/>
+      {images.map(({  id, url}) => (
+        <div key={id} className="p-4">
+          <RandomFox image={url}/>
         </div>
       ))}
       
