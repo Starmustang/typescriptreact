@@ -1,0 +1,1 @@
+type IImageItems = {  id: string, url: string}

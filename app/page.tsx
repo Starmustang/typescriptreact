@@ -1,38 +1,68 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import { RandomFox } from '../components/RandomFox'
+import { url } from "inspector";
+import { title } from "process";
+import { Random } from "lodash";
 
-const random = () => Math.floor(Math.random() *123) + 1
+const random = () => Random(1, 123);
 
 //generar un id unico simple
 const generateid = () => Math.random().toString(36).substr(2,9);
 
-type ImageItems = {  id: string, url: string}
+
 
 export default function Home() {
-  const [images, setImages] = useState<Array<ImageItems>>([
-    {id:generateid(), url:`https://randomfox.ca/images/${random()}.jpg`} ,
-    {id:generateid(), url:`https://randomfox.ca/images/${random()}.jpg`},
-    {id:generateid(), url:`https://randomfox.ca/images/${random()}.jpg`},
-    {id:generateid(), url:`https://randomfox.ca/images/${random()}.jpg`},
-  ]);
+  const [images, setImages] = useState<Array<IImageItems>>([]);
+
+  const addNewFox: MouseEventHandler<HTMLButtonElement> = (event) =>{
+      event.preventDefault()
+
+    const newImageItem: IImageItems = {
+      id: generateid(),
+      url: `https://randomfox.ca/images/${random()}.jpg`
+    };
+    setImages([
+      ...images,
+      newImageItem
+    ]);
+    window.plausible("add_fox")
+  }
 
   return (
-    <div>
+    <div>0
       <head>
         <title>Toner depot</title>
         <meta name="description" content="Generado por wilson"/>
         <link rel="icon" href="/favicon.ico"/>
+        <script
+        defer
+        data-domain="yourdomain.com"
+        src="https://plausible.io/js/script.js"
+        ></script>
       </head>
 
       <main>
       <h1 className="text-3xl font-bold underline">Hello world!</h1>      
-      {images.map(({  id, url}) => (
+<button onClick={addNewFox}>agregar un nuevo zorro</button>
+
+      {images.map(({  id, url}, index) => (
         <div key={id} className="p-4">
-          <RandomFox image={url}/>
+          <RandomFox            
+          onClick={() => console.log("Hey")}
+          title="Random Fox"
+          width={640} 
+          height="auto" 
+          className="rounded bg-gray-300"
+          src={url}     
+          onLazyLoad={(img) => {
+            console.log(`Image #${index + 1} carga. Modo:`, img);
+            
+          }}
+          />
         </div>
-      ))}
+      ))} 
       
       </main>
 
@@ -43,10 +73,3 @@ export default function Home() {
   );
 }
 
-/* "countDate": "2024-07-09T20:34:15.077Z",
-  "countBlackWhite": 0,
-  "countColor": 0,
-  "countScan": 0,
-  "clientNumber": 302,
-  "officeId": "4028918f84447901018452d92cbf0612",
-  "deviceId": "4028918f842601d401842e15243f00eb" */
